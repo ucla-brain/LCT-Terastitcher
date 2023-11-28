@@ -1,6 +1,12 @@
 TeraStitcher
 ===========================================================
 
+This is LCT's custom source code for Terastitcher. This is NOT the executables that should be downloaded and put onto customer or CRO workstations, that is located at https://github.com/LifeCanvas-Technologies/LCT-Terastitcher-release 
+
+If you would like to modify this code and compile it, please see the instructions located at https://lifecanvastech.slab.com/posts/2023-11-16-terastitcher-mod-fix-mni42212
+
+===========================================================
+
 A tool for fast automatic 3D-stitching of teravoxel-sized 
 microscopy images (BMC Bioinformatics 2012, 13:316)
 
