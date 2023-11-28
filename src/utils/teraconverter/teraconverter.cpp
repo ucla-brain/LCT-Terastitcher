@@ -55,6 +55,13 @@
 #include "Tiff3DMngr.h"
 
 
+#include <chrono>
+
+// ...
+
+
+
+
 /*
  * This is the driver program for the library class VolumeConverter
  *
@@ -166,6 +173,16 @@ inline string fillPath(const std::string & incompletePath, string defPath, strin
 
 
 int main ( int argc, char *argv[] ) {
+	// printf("$$$$$$$$$$$$$\n\n\n\nRuing main teraerter\n\n\n\n$$$$$$$$$$$$$$\n");
+	// using namespace std::chrono;
+	// milliseconds ms = duration_cast< milliseconds >(system_clock::now().time_since_epoch().count());
+	// printf("milliseconds: %d\n\n", ms);
+
+    // // declaring argument of time()
+    // time_t my_time = time(NULL);
+  
+    // // ctime() used to give the present time
+    // printf("Time:  %s\n", ctime(&my_time));
 
 	//char err_msg[IM_STATIC_STRINGS_SIZE];
 	try {
@@ -174,7 +191,7 @@ int main ( int argc, char *argv[] ) {
 		TemplateCLI cli;
 		cli.readParams(argc, argv);
 		cli.checkParams();
-		
+		// printf("\n\n\n checked parameters\n\n\n");
 
 		// start timer
 		double proctime = -TIME(0);
@@ -212,7 +229,9 @@ int main ( int argc, char *argv[] ) {
 		vcDriver(
 			(iim::VirtualVolume *) 0, // the volume has not been imported, the source path has to be passed
 			cli.src_root_dir, 
-			cli.dst_root_dir, 
+			cli.dst_root_dir,
+			cli.flat_path,
+			cli.flat_mean, 
 			cli.src_format, 
 			cli.dst_format, 
 			0, // invalid value: imout_depth is set inside

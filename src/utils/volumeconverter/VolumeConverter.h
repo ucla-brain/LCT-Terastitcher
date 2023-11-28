@@ -104,6 +104,8 @@ void vcDriver (
 	iim::VirtualVolume *vPtr = (iim::VirtualVolume *) 0, // if this in not null, parameters 'src_root_dir' and 'src_format' are not used
 	std::string src_root_dir = "",
 	std::string dst_root_dir = "",
+	std::string flat_path = "",
+	int			flat_mean = -1,
 	std::string src_format = "",
 	std::string dst_format = "",
 	int         img_depth = 0, // currently not used: imout depth is set internally
@@ -242,7 +244,7 @@ class VolumeConverter
 		* [saved_img_format]	: determines saved images format ("png","tif","jpeg", etc.).
 		* [saved_img_depth]		: determines saved images bitdepth (16 or 8).
 		**************************************************************************************************************/
-		void generateTiles(std::string output_path, bool* resolutions = NULL, 
+		void generateTiles(std::string output_path, std::string flat_path, int flat_mean = -1, bool* resolutions = NULL, 
 			int slice_height = -1, int slice_width = -1, int method = HALVE_BY_MEAN, bool isotropic = false, 
             bool show_progress_bar = true, const char* saved_img_format = iim::DEF_IMG_FORMAT.c_str(), 
             int saved_img_depth = iim::NUL_IMG_DEPTH, std::string frame_dir = "", bool par_mode = false, bool fixed_tiling = false )	throw (iim::IOException, iom::exception);

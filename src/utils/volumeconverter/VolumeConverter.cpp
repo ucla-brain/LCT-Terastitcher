@@ -120,6 +120,7 @@
 
 
 using namespace iim;
+// using namespace iomanager;
 
 
 // code to invoke the converter
@@ -127,6 +128,8 @@ void vcDriver (
 	iim::VirtualVolume *vPtr,
 	std::string src_root_dir,
 	std::string dst_root_dir,
+	std::string flat_path,
+	int			flat_mean,
 	std::string src_format,
 	std::string dst_format,
 	int         img_depth, // currently non used
@@ -153,8 +156,11 @@ void vcDriver (
 	std::string outFmt,                     //additional information about the output format (default: "")
 	int         nbits ) throw (iim::IOException, iom::exception) {
 		// do what you have to do
+		// printf("\n\n\nvc Driver running....\n\n\n");
+		// printf("vc Driver parameters: mdata_fname: %s, makeDirs: %d, metaData: %d, parallel: %d", mdata_fname, makeDirs, metaData, parallel);
 		VolumeConverter vc;
-
+		// printf("Volume_Converter\n");
+		show_progress_bar = false;
 		// call the version that forces the configuration even if the library has already been configured
 		resetLibTIFFcfg(!libtiff_uncompressed,libtiff_bigtiff,libtiff_rowsPerStrip);
 
@@ -164,11 +170,12 @@ void vcDriver (
 			vc.setSrcVolume(src_root_dir.c_str(),src_format.c_str(),"RGB",timeseries,downsamplingFactor,chanlist);
 
 		vc.setSubVolume(V0,V1,H0,H1,D0,D1);
-
+		// printf("^^^^^^^^^^^^^^^^\n\n\ntest 1\n\n\n\n^^^^^^^^^^^^^^^^^^\n");
 		if ( nbits )
 			vc.setCompressionAlgorithm(nbits);
-	
-		if ( dst_format == iim::SIMPLE_RAW_FORMAT )
+		// printf("^^^^^^^^^^^^^^^^\n\n\ntest 4\n\n\n\n^^^^^^^^^^^^^^^^^^\n");
+		if ( dst_format == iim::SIMPLE_RAW_FORMAT ) {
+			// printf("^^^^^^^^^^^^^^^^\n\n\ntest 5\n\n\n\n^^^^^^^^^^^^^^^^^^\n");
 			if ( timeseries ) {
 				vc.convertTo(dst_root_dir.c_str(),dst_format,8*vc.getVolume()->getBYTESxCHAN(),true,resolutions,
 					slice_height,slice_width,slice_depth,halving_method,isotropic);
@@ -191,7 +198,9 @@ void vcDriver (
 					slice_height,slice_width,halving_method,isotropic,
 					show_progress_bar,"raw",8*vc.getVolume()->getBYTESxCHAN(),"",parallel);
 			}
-		else if ( dst_format == iim::SIMPLE_FORMAT )
+		}
+		else if ( dst_format == iim::SIMPLE_FORMAT ) {
+			// printf("^^^^^^^^^^^^^^^^\n\n\ntest 6\n\n\n\n^^^^^^^^^^^^^^^^^^\n");
 			if ( timeseries ) {
 				vc.convertTo(dst_root_dir.c_str(),dst_format,8*vc.getVolume()->getBYTESxCHAN(),true,resolutions,
 					slice_height,slice_width,slice_depth,halving_method,isotropic);
@@ -214,7 +223,9 @@ void vcDriver (
 					slice_height,slice_width,halving_method,isotropic,
 					show_progress_bar,"tif",8*vc.getVolume()->getBYTESxCHAN(),"",parallel);
 			}
-		else if ( dst_format == iim::STACKED_RAW_FORMAT )
+		}
+		else if ( dst_format == iim::STACKED_RAW_FORMAT ) {
+			// printf("^^^^^^^^^^^^^^^^\n\n\ntest 7\n\n\n\n^^^^^^^^^^^^^^^^^^\n");
 			if ( timeseries ) {
 				vc.convertTo(dst_root_dir.c_str(),dst_format,8*vc.getVolume()->getBYTESxCHAN(),true,resolutions,
 					slice_height,slice_width,slice_depth,halving_method,isotropic);
@@ -230,31 +241,39 @@ void vcDriver (
 					show_progress_bar,"raw",8*vc.getVolume()->getBYTESxCHAN(),"",parallel);
 			}
 			else {
-				vc.generateTiles(dst_root_dir.c_str(),resolutions,
+				// printf("^^^^^^^^^^^^^^^^\n\n\ntest 2\n\n\n\n^^^^^^^^^^^^^^^^^^");
+				vc.generateTiles(dst_root_dir.c_str(), flat_path, flat_mean, resolutions,
 					slice_height,slice_width,halving_method,isotropic,
 					show_progress_bar,"raw",8*vc.getVolume()->getBYTESxCHAN(),"",parallel,fixed_tiling);
 			}
-		else if ( dst_format == iim::STACKED_FORMAT )
+		}
+		else if ( dst_format == iim::STACKED_FORMAT ) {
+			// printf("^^^^^^^^^^^^^^^^\n\n\ntest 8\n\n\n\n^^^^^^^^^^^^^^^^^^\n");
 			if ( timeseries ) {
 				vc.convertTo(dst_root_dir.c_str(),dst_format,8*vc.getVolume()->getBYTESxCHAN(),true,resolutions,
 					slice_height,slice_width,slice_depth,halving_method,isotropic);
 			}
 			else if ( makeDirs ) {
+				// printf("^^^^^^^^^^^^^^^^\n\n\ncreate directory\n\n\n\n^^^^^^^^^^^^^^^^^^\n");
 				vc.createDirectoryHierarchy(dst_root_dir.c_str(),ch_dir,resolutions,
 					slice_height,slice_width,-1,halving_method,isotropic,
 					show_progress_bar,"tif",8*vc.getVolume()->getBYTESxCHAN(),"",parallel);
 			}
 			else if ( metaData ) {
+				// printf("^^^^^^^^^^^^^^^^\n\n\ngenerate metadata\n\n\n\n^^^^^^^^^^^^^^^^^^\n");
 				vc.mdataGenerator(dst_root_dir.c_str(),ch_dir,resolutions,
 					slice_height,slice_width,-1,halving_method,isotropic,
 					show_progress_bar,"tif",8*vc.getVolume()->getBYTESxCHAN(),"",parallel);
 			}
 			else {
-				vc.generateTiles(dst_root_dir.c_str(),resolutions,
+				// printf("^^^^^^^^^^^^^^^^\n\n\ngenerate tiles\n\n\n\n^^^^^^^^^^^^^^^^^^");
+				vc.generateTiles(dst_root_dir.c_str(), flat_path, flat_mean, resolutions,
 					slice_height,slice_width,halving_method,isotropic,
 					show_progress_bar,"tif",8*vc.getVolume()->getBYTESxCHAN(),"",parallel,fixed_tiling);
 			}
+		}
 		else if ( dst_format == iim::TILED_FORMAT ) {
+			// printf("^^^^^^^^^^^^^^^^\n\n\ntest 9\n\n\n\n^^^^^^^^^^^^^^^^^^\n");
 			if ( timeseries ) {
 				vc.convertTo(dst_root_dir.c_str(),dst_format,8*vc.getVolume()->getBYTESxCHAN(),true,resolutions,
 					slice_height,slice_width,slice_depth,halving_method,isotropic);
@@ -276,6 +295,7 @@ void vcDriver (
 			}
 		}
 		else if ( dst_format == iim::TILED_TIF3D_FORMAT || dst_format == iim::TIF3D_FORMAT) {
+			// printf("^^^^^^^^^^^^^^^^\n\n\ntest 10\n\n\n\n^^^^^^^^^^^^^^^^^^\n");
 			if ( timeseries ) {
 				vc.convertTo(dst_root_dir.c_str(),dst_format,8*vc.getVolume()->getBYTESxCHAN(),true,resolutions,
 					slice_height,slice_width,slice_depth,halving_method,isotropic);
@@ -296,7 +316,8 @@ void vcDriver (
 					show_progress_bar,"Tiff3D",8*vc.getVolume()->getBYTESxCHAN(),"",parallel,fixed_tiling);
 			}
 		}
-		else if ( dst_format == iim::TILED_MC_FORMAT )
+		else if ( dst_format == iim::TILED_MC_FORMAT ) {
+			// printf("^^^^^^^^^^^^^^^^\n\n\ntest 11\n\n\n\n^^^^^^^^^^^^^^^^^^\n");
 			if ( timeseries ) {
 				vc.convertTo(dst_root_dir.c_str(),dst_format,8*vc.getVolume()->getBYTESxCHAN(),true,resolutions,
 					slice_height,slice_width,slice_depth,halving_method,isotropic);
@@ -316,7 +337,9 @@ void vcDriver (
 					slice_height,slice_width,slice_depth,halving_method,isotropic,
 					show_progress_bar,"Vaa3DRaw",8*vc.getVolume()->getBYTESxCHAN(),"",false,fixed_tiling);
 			}
-		else if ( dst_format == iim::TILED_MC_TIF3D_FORMAT )
+		}
+		else if ( dst_format == iim::TILED_MC_TIF3D_FORMAT ) {
+			// printf("^^^^^^^^^^^^^^^^\n\n\ntest 12\n\n\n\n^^^^^^^^^^^^^^^^^^\n");
 			if ( timeseries ) {
 				vc.convertTo(dst_root_dir.c_str(),dst_format,8*vc.getVolume()->getBYTESxCHAN(),true,resolutions,
 					slice_height,slice_width,slice_depth,halving_method,isotropic);
@@ -336,11 +359,15 @@ void vcDriver (
 					slice_height,slice_width,slice_depth,halving_method,isotropic,
 					show_progress_bar,"Tiff3D",8*vc.getVolume()->getBYTESxCHAN(),"",parallel,fixed_tiling);
 			}
-		else if ( dst_format == iim::BDV_HDF5_FORMAT )
+		}
+		else if ( dst_format == iim::BDV_HDF5_FORMAT ) {
+			// printf("^^^^^^^^^^^^^^^^\n\n\ntest 1\n\n\n\n^^^^^^^^^^^^^^^^^^\n");
 			vc.generateTilesBDV_HDF5(dst_root_dir.c_str(),resolutions,
 				slice_height,slice_width,slice_depth,halving_method,isotropic,
 				show_progress_bar,"Fiji_HDF5",8*vc.getVolume()->getBYTESxCHAN());
+		}
 		else if ( dst_format == iim::IMS_HDF5_FORMAT ) {
+			// printf("^^^^^^^^^^^^^^^^\n\n\ntest 13\n\n\n\n^^^^^^^^^^^^^^^^^^\n");
 			if ( timeseries ) {
 				// missing parameters: mdata_fname, isotropic, 
 				vc.convertTo(dst_root_dir.c_str(),dst_format,8*vc.getVolume()->getBYTESxCHAN(),true,resolutions,
@@ -565,11 +592,21 @@ void VolumeConverter::setCompressionAlgorithm(int _nbits ) throw (iim::IOExcepti
 * [saved_img_format]	: determines saved images format ("png","tif","jpeg", etc.).
 * [saved_img_depth]		: determines saved images bitdepth (16 or 8).
 **************************************************************************************************************/
-void VolumeConverter::generateTiles(std::string output_path, bool* resolutions, 
+void VolumeConverter::generateTiles(std::string output_path, std::string flat_path, int flat_mean, bool* resolutions, 
 				int slice_height, int slice_width, int method, bool isotropic, bool show_progress_bar, 
                 const char* saved_img_format, int saved_img_depth, std::string frame_dir, bool par_mode, bool fixed_tiling )	throw (IOException, iom::exception)
 {
-    printf("in VolumeConverter::generateTiles(path = \"%s\", resolutions = ", output_path.c_str());
+    
+	// printf("\ngenerateTiles:: flat_path: %s\n", flat_path.c_str());
+	bool flat_path_exists = false;
+	if(flat_path.compare("") != 0) {
+		// printf("There is a flat_path.  Mean: %d\n", flat_mean);
+		flat_path_exists = true;
+	}
+	else
+		// printf("There is not a flat_path\n");
+	
+	printf("in VolumeConverter::generateTiles(path = \"%s\", resolutions = ", output_path.c_str());
     for(int i=0; i< TMITREE_MAX_HEIGHT; i++)
         printf("%d", resolutions[i]);
     printf(", slice_height = %d, slice_width = %d, method = %d, show_progress_bar = %s, saved_img_format = %s, saved_img_depth = %d, frame_dir = \"%s\")\n",
@@ -662,6 +699,55 @@ void VolumeConverter::generateTiles(std::string output_path, bool* resolutions,
 	width = this->H1-this->H0;
 	height = this->V1-this->V0;
 	depth = this->D1-this->D0;
+
+	// int flat_mean = 128;
+	unsigned char* flat_data;
+	if (flat_path_exists) {
+	
+		flat_data = new unsigned char[height*width];
+		int height1 = (int)height;
+		int width1 = (int)width;
+
+		int flat_bytes_x_chan = 2;
+		int flat_chans = 1;
+		const std::string params = "";
+
+		// printf("flat_path: %s\n", typeid(flat_path).name());
+		// printf("width: %s\n", typeid(width1).name());
+		// printf("height: %s\n", typeid(height1).name());
+		// printf("flat_bytes_x_chan: %s\n", typeid(flat_bytes_x_chan).name());
+		// printf("flat_chans: %s\n", typeid(flat_chans).name());
+		// printf("flat_data: %s\n", typeid(flat_data).name());
+		// printf("params: %s\n", typeid(params).name());
+
+		// printf("flat_path: %s\n", flat_path.c_str());
+		// printf("width: %d\n", width1);
+		// printf("height: %d\n", height1);
+		// printf("flat_bytes_x_chan: %d\n", flat_bytes_x_chan);
+		// printf("flat_chans: %d\n", flat_chans);
+		// // printf("flat_data: %u\n", flat_data);
+		// printf("params: %s\n", params.c_str());
+
+		// read flat data from image
+		iomanager::IOPluginFactory::getPlugin2D(iomanager::IMIN_PLUGIN)->readData(flat_path, width1, height1, flat_bytes_x_chan, flat_chans, flat_data, params);
+		// iomanager::IOPluginFactory::getPlugin2D(iomanager::IMIN_PLUGIN)->readData(flat_path,width,height,flat_bytes_x_chan,flat_chans,flat_data);
+		
+		// long flat_sum = 0;
+		// for (int i=0; i < width1 * height1; i++)
+		// {
+		// 	flat_sum += flat_data[i];
+		// }
+		// flat_mean = flat_sum / height1 / width1;
+		
+		// for (int i=0; i<10; i++)
+		// {
+		// 	printf("i: %d, flat__________data: %d\n", i, flat_data[i]);
+		// }
+		// printf("flat_sum: %d, flat_mean: %f\n", flat_sum, flat_mean);
+	}
+
+
+
 
  	// test, if any, should be done on V0, V1, ...
 	//if(par_mode && block_depth == -1) // 2016-04-13. Giulio. if conversion is parallelized, option --slicedepth must be used to set block_depth
@@ -987,14 +1073,70 @@ void VolumeConverter::generateTiles(std::string output_path, bool* resolutions,
 										<< this->getMultiresABS_V_string(i,start_height) << "_" 
 										<< this->getMultiresABS_H_string(i,start_width) << "_"
 										<< abs_pos_z.str(); 
-							if ( internal_rep == REAL_INTERNAL_REP )
+							if ( internal_rep == REAL_INTERNAL_REP ) {
+								// printf("\n\n\n\n\n******************\nSave 1111111\n\n\n\n***************\n*************\n********\n");
 								VirtualVolume::saveImage(img_path.str(), 
                                     rbuffer + buffer_z*(height/powInt(2,i))*(width/powInt(2,i)), // adds the stride
                                     (int)height/(powInt(2,i)),(int)width/(powInt(2,i)),
 									start_height,end_height,start_width,end_width, 
 									saved_img_format, saved_img_depth);
+							}
+								
 							else // internal_rep == UINT8_INTERNAL_REP
-								if ( channels == 1 )
+								// printf("*******\n*\n*\n*1\n*\n*\n**************************\n\n\n");
+								if ( channels == 1 ) {
+
+									// for (int i=1000; i < 1100; i++) {
+									// 	printf("i: %d, ubuffer[0][i]: %d\n", i, ubuffer[0][i]);
+									// }
+									// printf("ubuffer [0][100]: %d\n", ubuffer[0][100]);
+									// printf("ubuffer [0][1000]: %d\n", ubuffer[0][1000]);
+									// printf("ubuffer [0][9567]: %d\n", ubuffer[0][9567]);
+									// printf("ubuffer [0][1959]: %d\n", ubuffer[0][1959]);
+									// printf("ubuffer [0][56]: %d\n", ubuffer[0][56]);
+									// printf("ubuffer [0][4951]: %d\n", ubuffer[0][4951]);
+									// printf("bufferz: %d\n", buffer_z);
+									
+
+									// printf("*******\n*\n*\n*2\n*\n*\n**************************\n\n\n");
+									if (flat_path_exists) {
+										int buffer_mod, buffer_divisor;
+										float buffer_value;
+										
+										
+										// for (int i=0; i<10; i++)
+										// {
+										// 	buffer_mod = ubuffer[0][2*i];
+										// 	buffer_divisor = ubuffer[0][2*i+1];
+										// 	buffer_value = 256 * buffer_divisor + buffer_mod;
+											
+										// 	printf("i: %d, buffer_mod: %d, buffer_divisor: %d, buffer_value: %f\n", i, buffer_mod, buffer_divisor, buffer_value);
+										// }
+
+										// printf("Dividing by flat...   flat_mean: %i\n", flat_mean);
+
+										for (int i=0; i < height*width; i++)
+										{
+											buffer_mod = ubuffer[0][2*i];
+											buffer_divisor = ubuffer[0][2*i+1];
+											buffer_value = (float) (256 * buffer_divisor + buffer_mod) / (float) flat_data[i] * (float) flat_mean;
+											if (buffer_value > 65535) {
+												buffer_value = (float) 65535;
+											}
+											ubuffer[0][2*i] = (int) buffer_value % 256;
+											ubuffer[0][2*i+1] = (int) buffer_value / 256;
+										}
+										
+										// for (int i=0; i<10; i++)
+										// {
+										// 	buffer_mod = ubuffer[0][2*i];
+										// 	buffer_divisor = ubuffer[0][2*i+1];
+										// 	buffer_value = 256 * buffer_divisor + buffer_mod;
+											
+										// 	printf("i: %d, buffer_mod: %d, buffer_divisor: %d, buffer_value: %f, flat_value: %d\n", i, buffer_mod, buffer_divisor, buffer_value, flat_data[i]);
+										// }
+									}
+									
 									VirtualVolume::saveImage_from_UINT8(img_path.str(), 
                                         ubuffer[0] + buffer_z*(height/powInt(2,i))*(width/powInt(2,i))*bytes_chan, // adds the stride
                                         (iim::uint8 *) 0,
@@ -1002,6 +1144,7 @@ void VolumeConverter::generateTiles(std::string output_path, bool* resolutions,
                                         (int)height/(powInt(2,i)),(int)width/(powInt(2,i)),
 										start_height,end_height,start_width,end_width, 
 										saved_img_format, saved_img_depth);
+								}
 								else if ( channels == 2 ) 
 									VirtualVolume::saveImage_from_UINT8(img_path.str(), 
                                         ubuffer[0] + buffer_z*(height/powInt(2,i))*(width/powInt(2,i))*bytes_chan, // stride to be added for slice buffer_z
@@ -4827,9 +4970,9 @@ void VolumeConverter::convertTo(
             volume->setActiveFrames(t,t);
             std::string frame_dir = iim::TIME_FRAME_PREFIX + strprintf("%06d", t);
             if(output_format.compare(iim::STACKED_FORMAT) == 0)
-                generateTiles(output_path, resolutions, block_height, block_width, method, isotropic, true, "tif", output_bitdepth, frame_dir, false);
+                generateTiles(output_path, "", -1, resolutions, block_height, block_width, method, isotropic, true, "tif", output_bitdepth, frame_dir, false);
             else if(output_format.compare(iim::STACKED_RAW_FORMAT) == 0)
-                generateTiles(output_path, resolutions, block_height, block_width, method, isotropic, true, "raw", output_bitdepth, frame_dir, false);
+                generateTiles(output_path, "", -1, resolutions, block_height, block_width, method, isotropic, true, "raw", output_bitdepth, frame_dir, false);
             else if(output_format.compare(iim::TILED_FORMAT) == 0)
                 generateTilesVaa3DRaw(output_path, resolutions, block_height, block_width, block_depth, method, isotropic, true, "raw", output_bitdepth, frame_dir, false);
             else if(output_format.compare(iim::TILED_MC_FORMAT) == 0)
@@ -4854,9 +4997,9 @@ void VolumeConverter::convertTo(
     else
     {
         if(output_format.compare(iim::STACKED_FORMAT) == 0)
-            generateTiles(output_path, resolutions, block_height, block_width, method, isotropic, true, iim::DEF_IMG_FORMAT.c_str(), output_bitdepth, "", false);
+            generateTiles(output_path, "", -1, resolutions, block_height, block_width, method, isotropic, true, iim::DEF_IMG_FORMAT.c_str(), output_bitdepth, "", false);
 		else if(output_format.compare(iim::STACKED_RAW_FORMAT) == 0)
-			generateTiles(output_path, resolutions, block_height, block_width, method, isotropic, true, "raw", output_bitdepth, "", false);
+			generateTiles(output_path, "", -1, resolutions, block_height, block_width, method, isotropic, true, "raw", output_bitdepth, "", false);
         else if(output_format.compare(iim::TILED_FORMAT) == 0)
             generateTilesVaa3DRaw(output_path, resolutions, block_height, block_width, block_depth, method, isotropic, true, "raw", output_bitdepth, "", false);
         else if(output_format.compare(iim::TILED_MC_FORMAT) == 0)

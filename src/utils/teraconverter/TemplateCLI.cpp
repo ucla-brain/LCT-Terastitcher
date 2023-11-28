@@ -104,6 +104,8 @@ void TemplateCLI::readParams(int argc, char** argv) throw (iom::exception)
 
 	TCLAP::ValueArg<std::string> p_src_root_dir("s","src","Source file / root directory path.",true,"","string");
 	TCLAP::ValueArg<std::string> p_dst_root_dir("d","dst","Destination root directory path.",false,"","string");
+	TCLAP::ValueArg<std::string> p_flat_path("","flatpath","Path to flat correction image.",false,"","string");
+	TCLAP::ValueArg<int> p_flat_mean("","flatmean","Mean value for flat image.",false,-1,"unsigned");
 	TCLAP::ValueArg<std::string> p_mdata_fname("","mdata_fname","File containing general metadata of the image.",false,"","string");
 	TCLAP::ValueArg<std::string> p_ch_dir("","ch_dir","subdirectory to store the channel (single channel in tiled 4D format only).",false,"","string");
 	TCLAP::ValueArg<int> p_slice_depth("","depth","Slice depth.",false,-1,"unsigned");
@@ -129,6 +131,8 @@ void TemplateCLI::readParams(int argc, char** argv) throw (iom::exception)
 		iim::MULTICYCLE_FORMAT  + "\")";
 	TCLAP::ValueArg<string> p_src_format("","sfmt",temp.c_str(),true,"","string");
 
+
+//  TILED_TIF3D_FORMAT
 	string tempd = "Destination format (\"" + 
 		iim::SIMPLE_RAW_FORMAT + "\"/\"" + 
 		//iim::STACKED_RAW_FORMAT + "\"/\"" + 
@@ -234,6 +238,8 @@ void TemplateCLI::readParams(int argc, char** argv) throw (iom::exception)
 	cmd.add(p_mdata_fname);
 	cmd.add(p_dst_root_dir);
 	cmd.add(p_src_root_dir);
+	cmd.add(p_flat_path);
+	cmd.add(p_flat_mean);
 
 	// Parse the argv array and catch <TCLAP> exceptions, which are translated into <iim::IOException> exceptions
 	char errMsg[S_STATIC_STRINGS_SIZE];
@@ -365,6 +371,8 @@ void TemplateCLI::readParams(int argc, char** argv) throw (iom::exception)
 	vm::SPARSE_DATA     = p_sparse_data.getValue();
 	this->src_root_dir  = p_src_root_dir.getValue();
 	this->dst_root_dir  = p_dst_root_dir.getValue();
+	this->flat_path	    = p_flat_path.getValue();
+	this->flat_mean	    = p_flat_mean.getValue();
 	this->mdata_fname   = p_mdata_fname.getValue();
 	this->ch_dir        = p_ch_dir.getValue();
 	this->slice_depth   = p_slice_depth.getValue();
