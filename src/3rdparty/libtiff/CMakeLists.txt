@@ -3,7 +3,7 @@
 #
 # ----------------------------------------------------------------------------
 project( tiff )
-cmake_minimum_required(VERSION 2.7)
+cmake_minimum_required(VERSION 2.9)
 
 include(CheckFunctionExists)
 include(CheckIncludeFile)

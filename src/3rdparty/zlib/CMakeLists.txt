@@ -4,7 +4,7 @@
 # ----------------------------------------------------------------------------
 
 project(zlib C)
-cmake_minimum_required(VERSION 2.7)
+cmake_minimum_required(VERSION 2.9)
 
 # hiding unused predefined variables
 set (CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "")

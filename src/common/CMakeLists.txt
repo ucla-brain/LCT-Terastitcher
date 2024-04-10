@@ -1,5 +1,8 @@
 # CMakeLists.txt in common dir
 
+# Find Qt5 and required components
+find_package(Qt5 COMPONENTS Core REQUIRED)
+
 include_directories (${TeraStitcher_SOURCE_DIR}/imagemanager)
 
 # activate Qt-based code

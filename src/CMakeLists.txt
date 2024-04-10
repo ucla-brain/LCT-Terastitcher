@@ -12,6 +12,10 @@ endif()
 
 project( TeraStitcher )
 
+# Set C++14 as the default standard globally.
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # include cmake scripts
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cmake)
 include(Utils)
