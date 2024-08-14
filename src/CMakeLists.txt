@@ -44,6 +44,8 @@ add_subdirectory( common )
 add_subdirectory( mappingmanager )
 add_subdirectory( multilayersmanager )
 add_subdirectory( ui )
+add_subdirectory ( utils/teraconverter )
+add_subdirectory( utils/volumeconverter )
 
 # build user-selectable modules
 # --- find modules ---
